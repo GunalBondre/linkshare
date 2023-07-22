@@ -1,0 +1,27 @@
+.wrapper {
+    width: 100%;
+    height: 100vh;
+
+    .form {
+        width: 70%;
+        height: 90%;
+        background-color: var(--white);
+        display: flex;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        border-radius: 10px;
+        align-items: center;
+
+        &__leftSection,
+        &__rightSection {
+            flex: 1;
+        }
+
+        &__leftSection {
+            background-image: url(../../images//mobile.png);
+            height: 100%;
+            background-repeat: no-repeat;
+            object-fit: contain;
+            border-right: 4px solid var(--borderRightColor);
+        }
+    }
+}
