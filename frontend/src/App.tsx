@@ -1,11 +1,12 @@
 import './App.css';
+import Login from './pages/register/Login';
 import Register from './pages/register/Register';
 
 function App() {
 	return (
 		<>
 			<div>
-				<Register />
+				<Login />
 			</div>
 		</>
 	);

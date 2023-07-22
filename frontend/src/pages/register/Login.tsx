@@ -3,7 +3,7 @@ import './register.scss';
 import MailLockIcon from '@mui/icons-material/MailLock';
 import EnhancedEncryptionIcon from '@mui/icons-material/EnhancedEncryption';
 
-const Register: FC = () => {
+const Login: FC = () => {
 	return (
 		<div className='wrapper flex-center'>
 			<div className='form flex-center'>
@@ -11,7 +11,7 @@ const Register: FC = () => {
 				<div className='form__rightSection flex-center'>
 					<form action='' className='form__form-wrapper'>
 						<div className='form__heading'>
-							<h2>Create Account</h2>
+							<h2>Login to your Account</h2>
 							<p>Lets get you started sharing your links</p>
 						</div>
 						<div className='form__fields'>
@@ -38,23 +38,12 @@ const Register: FC = () => {
 								</div>
 							</div>
 							<div className='form__group flex-column'>
-								<label>Confirm Password</label>
-								<div className='iconwrapper'>
-									<EnhancedEncryptionIcon className='icon' />
-									<input
-										type='password'
-										name='cpassword'
-										placeholder='At least 8 character'
-									/>
-								</div>
-							</div>
-							<div className='form__group flex-column'>
 								<button type='submit' className='button'>
-									Create New Account
+									Login to Account
 								</button>
 							</div>
 							<p>
-								Already have an account? <a href=''>Login</a>
+								Dont have an account? <a href=''>Register</a>
 							</p>
 						</div>
 					</form>
@@ -64,4 +53,4 @@ const Register: FC = () => {
 	);
 };
 
-export default Register;
+export default Login;

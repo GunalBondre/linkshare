@@ -21,7 +21,39 @@
             height: 100%;
             background-repeat: no-repeat;
             object-fit: contain;
-            border-right: 4px solid var(--borderRightColor);
+            background-color: var(--secondaryBlue);
         }
+
+        &__rightSection {
+            height: 100%;
+            flex-direction: column;
+            padding: 0 4rem;
+
+        }
+
+        &__form-wrapper {
+            width: 80%;
+        }
+
+        &__heading {
+            margin-bottom: 2rem;
+        }
+
+        &__group {
+            margin-bottom: 2rem;
+
+            .iconwrapper {
+                position: relative;
+
+                .icon {
+                    position: absolute;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    left: 10px;
+                }
+            }
+        }
+
+
     }
 }
