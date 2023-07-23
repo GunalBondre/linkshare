@@ -39,21 +39,6 @@
             margin-bottom: 2rem;
         }
 
-        &__group {
-            margin-bottom: 2rem;
-
-            .iconwrapper {
-                position: relative;
-
-                .icon {
-                    position: absolute;
-                    top: 50%;
-                    transform: translateY(-50%);
-                    left: 10px;
-                }
-            }
-        }
-
 
     }
 }

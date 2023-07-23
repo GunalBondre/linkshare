@@ -1,0 +1,35 @@
+// iPhone13Mockup.scss
+$iphone13-width: 300px;
+$iphone13-height: 600px;
+$iphone13-bezel-width: 8px;
+$iphone13-bezel-color: #000;
+
+.iphone-13-mockup {
+    position: relative;
+    width: $iphone13-width;
+    height: $iphone13-height;
+    background-color: #000;
+    left: 100px;
+    top: 50px;
+    /* Set the background color to match the phone's bezel color */
+
+
+    /* Add a border radius to simulate the phone's rounded corners */
+    border-radius: 36px;
+
+    /* Optional: Add some shadow to the mockup */
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.screen-content {
+    /* Position the screen content within the mockup */
+    position: absolute;
+    top: $iphone13-bezel-width;
+    left: $iphone13-bezel-width;
+    right: $iphone13-bezel-width;
+    bottom: $iphone13-bezel-width;
+
+    /* Add a background color to simulate the phone's screen */
+    background-color: #fff;
+    border-radius: 36px;
+}
