@@ -1,46 +1,54 @@
+import React, { useState, ChangeEvent, FormEvent } from 'react';
 import './form.scss';
-import { useState } from 'react';
 
 export interface FieldConfig {
 	name: string;
 	label: string;
 	type: string;
-	placeholder?: string;
+	placeholder: string;
 	icon: React.ReactNode;
 	width?: string;
+	// Add more attributes like placeholder, required, etc., as needed
 }
 
 interface Props {
 	fields: FieldConfig[];
-	onSubmit: (FormData: { [key: string]: string }) => void;
+	onSubmit: (formData: { [key: string]: string }) => void;
 }
 
 const Form: React.FC<Props> = ({ fields, onSubmit }) => {
-	const [formValue, setFormValue] = useState<{ [key: string]: string }>({});
+	const [formValues, setFormValues] = useState<{ [key: string]: string }>({});
 
-	const handleSubmit = () => {};
-	const handleChange = () => {};
+	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+		const { name, value } = e.target;
+		setFormValues({ ...formValues, [name]: value });
+	};
+
+	const handleSubmit = (e: FormEvent) => {
+		e.preventDefault();
+		onSubmit(formValues);
+	};
+
 	return (
-		<div>
-			<form action='' onSubmit={handleSubmit}>
-				{fields.map((field) => (
-					<div key={field.name}>
-						<div className='form__group'>
-							<label htmlFor={field.name}>{field.label}</label>
-							<div className='iconwrapper'>{field.icon}</div>
-							<input
-								type={field.type}
-								name={field.name}
-								value={formValue[field.name] || ''}
-								onChange={handleChange}
-								placeholder={field.placeholder}
-								style={{ width: field.width }}
-							/>
-						</div>
+		<form onSubmit={handleSubmit}>
+			{fields.map((field) => (
+				<div key={field.name}>
+					<div className='form__group'>
+						<label htmlFor={field.name}>{field.label}</label>
+						<div className='iconwrapper'>{field.icon}</div>
+						<input
+							type={field.type}
+							name={field.name}
+							value={formValues[field.name] || ''}
+							onChange={handleChange}
+							placeholder={field.placeholder}
+							style={{ width: field.width }}
+							// You can add other input attributes like placeholder, required, etc.
+						/>
 					</div>
-				))}
-			</form>
-		</div>
+				</div>
+			))}
+		</form>
 	);
 };
 

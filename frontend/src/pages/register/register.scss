@@ -8,7 +8,7 @@
         background-color: var(--white);
         display: flex;
         box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-        border-radius: 1rem;
+        border-radius: 10px;
         align-items: center;
 
         &__leftSection,
@@ -17,16 +17,18 @@
         }
 
         &__leftSection {
-            background-image: url(../../assets/mobilemockup.png);
+            background-image: url(../../images//mobile.png);
             height: 100%;
             background-repeat: no-repeat;
+            object-fit: contain;
             background-color: var(--secondaryBlue);
-            background-position: center;
         }
 
         &__rightSection {
+            height: 100%;
+            flex-direction: column;
             padding: 0 4rem;
-            align-items: center;
+
         }
 
         &__form-wrapper {
@@ -37,9 +39,6 @@
             margin-bottom: 2rem;
         }
 
-        .button {
-            width: 100%;
-        }
 
     }
 }
