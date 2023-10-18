@@ -3,12 +3,22 @@ import './register.scss';
 
 import MailLockIcon from '@mui/icons-material/MailLock';
 import EnhancedEncryptionIcon from '@mui/icons-material/EnhancedEncryption';
-import { Link } from 'react-router-dom';
+import { signInUser } from '../../redux/authSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../../redux/store';
+import { useNavigate } from 'react-router';
 
 const Login = () => {
+	const dispatch = useDispatch<AppDispatch>();
+	const authState = useSelector((state: RootState) => state.auth);
+	const navigate = useNavigate();
+	console.log(authState);
+
 	const handleSubmit = (formData: { [key: string]: string }) => {
 		// Handle form submission specific to Component1
-		console.log('Form data from Component1:', formData);
+		const { email, password } = formData;
+		dispatch(signInUser({ email, password }));
+		navigate('/', { replace: true });
 	};
 	const fields: FieldConfig[] = [
 		{
@@ -40,14 +50,6 @@ const Login = () => {
 							<p>Lets get you started sharing your links</p>
 						</div>
 						<Form fields={fields} onSubmit={handleSubmit} />
-						<div className='form__group flex-column'>
-							<button type='submit' className='button'>
-								Login to your account
-							</button>
-						</div>
-						<p>
-							Dont have an account? <Link to='/register'>Register</Link>
-						</p>
 					</div>
 				</div>
 			</div>

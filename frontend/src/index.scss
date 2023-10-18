@@ -2,6 +2,7 @@
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
+	list-style: none;
 }
 
 :root {
@@ -10,12 +11,14 @@
 	--primaryBlue: blue;
 	--secondaryBlue: aliceBlue;
 }
+
 body {
 	overflow: hidden;
 }
 
 a {
 	color: inherit;
+
 }
 
 .flex-center {
@@ -23,6 +26,7 @@ a {
 	justify-content: center;
 	align-items: center;
 }
+
 .flex-column {
 	display: flex;
 	flex-direction: column;
@@ -30,63 +34,75 @@ a {
 
 /* Set the base font size to 10px */
 html {
-	font-size: 62.5%; /* 1rem = 10px (10px / 16px = 62.5%) */
+	font-size: 62.5%;
+	/* 1rem = 10px (10px / 16px = 62.5%) */
 }
 
 /* Global Typography */
 body {
 	font-family: 'Roboto', sans-serif;
-	font-size: 1.6rem; /* 16px */
+	font-size: 1.6rem;
+	/* 16px */
 	line-height: 1.5;
 	font-weight: 400;
 }
 
 /* Headings */
 h1 {
-	font-size: 3.2rem; /* 32px */
+	font-size: 3.2rem;
+	/* 32px */
 	line-height: 1.2;
 	font-weight: 700;
 }
 
 h2 {
-	font-size: 2.4rem; /* 24px */
+	font-size: 2.4rem;
+	/* 24px */
 	line-height: 1.3;
 	font-weight: 700;
 }
 
 h3 {
-	font-size: 2rem; /* 20px */
+	font-size: 2rem;
+	/* 20px */
 	line-height: 1.4;
 	font-weight: 700;
 }
 
 h4 {
-	font-size: 1.8rem; /* 18px */
+	font-size: 1.8rem;
+	/* 18px */
 	line-height: 1.4;
 	font-weight: 700;
 }
 
 h5 {
-	font-size: 1.6rem; /* 16px */
+	font-size: 1.6rem;
+	/* 16px */
 	line-height: 1.4;
 	font-weight: 700;
 }
 
 h6 {
-	font-size: 1.4rem; /* 14px */
+	font-size: 1.4rem;
+	/* 14px */
 	line-height: 1.4;
 	font-weight: 700;
 }
+
 /* Paragraph */
 p {
-	font-size: 1.6rem; /* 16px */
+	font-size: 1.6rem;
+	/* 16px */
 	line-height: 1.5;
 }
 
 /* Span */
 span {
-	font-size: 1.4rem; /* 14px */
+	font-size: 1.4rem;
+	/* 14px */
 }
+
 label {
 	font-size: 1.2rem;
 	font-weight: 100;

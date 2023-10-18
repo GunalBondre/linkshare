@@ -37,7 +37,7 @@ const LinkForm = () => {
 						</p>
 					</div>
 
-					<Form fields={fields} onSubmit={handleSubmit} />
+					<Form fields={fields} onSubmit={handleSubmit} formType='link' />
 					<div className='form__group flex-column'>
 						<button type='submit' className='button'>
 							Add Link

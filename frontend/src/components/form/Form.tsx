@@ -1,5 +1,6 @@
 import React, { useState, ChangeEvent, FormEvent } from 'react';
 import './form.scss';
+import { Link } from 'react-router-dom';
 
 export interface FieldConfig {
 	name: string;
@@ -8,15 +9,17 @@ export interface FieldConfig {
 	placeholder: string;
 	icon: React.ReactNode;
 	width?: string;
+
 	// Add more attributes like placeholder, required, etc., as needed
 }
 
 interface Props {
 	fields: FieldConfig[];
+	formType?: string;
 	onSubmit: (formData: { [key: string]: string }) => void;
 }
 
-const Form: React.FC<Props> = ({ fields, onSubmit }) => {
+const Form: React.FC<Props> = ({ fields, onSubmit, formType }) => {
 	const [formValues, setFormValues] = useState<{ [key: string]: string }>({});
 
 	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -48,6 +51,21 @@ const Form: React.FC<Props> = ({ fields, onSubmit }) => {
 					</div>
 				</div>
 			))}
+			{formType !== 'link' && (
+				<>
+					<div className='form__group flex-column'>
+						<button type='submit' className='button'>
+							{formType === 'register' ? 'Create New Account' : 'Sign In'}
+						</button>
+					</div>
+					<p>
+						Already have an account?
+						<Link to={formType === 'register' ? '/login' : '/register'}>
+							{formType === 'register' ? 'Login' : 'Register'}
+						</Link>
+					</p>
+				</>
+			)}
 		</form>
 	);
 };

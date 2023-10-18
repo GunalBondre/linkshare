@@ -1,16 +1,34 @@
 import Form, { FieldConfig } from '../../components/form/Form';
 import './register.scss';
-
+import { useDispatch, useSelector } from 'react-redux';
 import MailLockIcon from '@mui/icons-material/MailLock';
 import EnhancedEncryptionIcon from '@mui/icons-material/EnhancedEncryption';
-import { Link } from 'react-router-dom';
+import { registerUser } from '../../redux/authSlice';
+import { AppDispatch, RootState } from '../../redux/store';
+import PersonIcon from '@mui/icons-material/Person';
+import { useNavigate } from 'react-router-dom';
 
 const Signup = () => {
-	const handleSubmit = (formData: { [key: string]: string }) => {
+	const dispatch = useDispatch<AppDispatch>();
+	const authState = useSelector((state: RootState) => state.auth);
+	const navigate = useNavigate();
+
+	const handleSubmit = async (formData: { [key: string]: string }) => {
 		// Handle form submission specific to Component1
-		console.log('Form data from Component1:', formData);
+		const { email, username, password } = formData;
+		dispatch(registerUser({ email, username, password }));
+		if (authState.user !== null) {
+			navigate('/login');
+		}
 	};
 	const fields: FieldConfig[] = [
+		{
+			name: 'username',
+			label: 'Enter Username',
+			type: 'text',
+			placeholder: 'Enter Username',
+			icon: <PersonIcon className='icon' />, // Use the IconEmail component for Field 2
+		},
 		{
 			name: 'email',
 			label: 'Enter Email',
@@ -32,6 +50,7 @@ const Signup = () => {
 			placeholder: 'At least 8 characters',
 			icon: <EnhancedEncryptionIcon className='icon' />, // Use the IconEmail component for Field 2
 		},
+
 		// Add more fields with their respective icons
 	];
 
@@ -45,15 +64,7 @@ const Signup = () => {
 							<h2>Create Account</h2>
 							<p>Lets get you started sharing your links</p>
 						</div>
-						<Form fields={fields} onSubmit={handleSubmit} />
-						<div className='form__group flex-column'>
-							<button type='submit' className='button'>
-								Create New Account
-							</button>
-						</div>
-						<p>
-							Already have an account? <Link to='/login'>Login</Link>
-						</p>
+						<Form fields={fields} onSubmit={handleSubmit} formType='register' />
 					</div>
 				</div>
 			</div>
