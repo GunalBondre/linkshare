@@ -3,7 +3,16 @@ import LinkIcon from '@mui/icons-material/Link';
 import TitleIcon from '@mui/icons-material/Title';
 import { FieldConfig } from '../form/Form';
 import Form from '../form/Form';
+import { createLink } from '../../redux/linkSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../../redux/store';
+
 const LinkForm = () => {
+	const dispatch = useDispatch<AppDispatch>();
+	const userData = useSelector((state: RootState) => state.auth);
+	const { user } = userData;
+	const id = user?.id;
+
 	const fields: FieldConfig[] = [
 		{
 			name: 'title',
@@ -23,7 +32,10 @@ const LinkForm = () => {
 
 	const handleSubmit = (formData: { [key: string]: string }) => {
 		// Handle form submission specific to Component1
-		console.log('Form data from Component1:', formData);
+
+		const { title, link } = formData;
+
+		dispatch(createLink({ title, link, id }));
 	};
 	return (
 		<div>
@@ -38,11 +50,6 @@ const LinkForm = () => {
 					</div>
 
 					<Form fields={fields} onSubmit={handleSubmit} formType='link' />
-					<div className='form__group flex-column'>
-						<button type='submit' className='button'>
-							Add Link
-						</button>
-					</div>
 				</div>
 			</div>
 		</div>

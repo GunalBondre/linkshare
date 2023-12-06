@@ -1,11 +1,13 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
+import { toast } from 'react-toastify';
 
 interface User {
-	_id: string;
+	id: string;
 	username: string;
 	email: string;
 	password: string;
+	token: string | null;
 	// Add other user properties here
 }
 
@@ -13,39 +15,83 @@ interface AuthState {
 	user: User | null;
 	loading: boolean;
 	error: string | null;
+	token: string | null;
 }
 
+const getTokenFromLocalStorage = () => {
+	return localStorage.getItem('token');
+};
+
+const setTokenInLocalStorage = (token: string | null) => {
+	if (token) {
+		return localStorage.setItem('token', token);
+	} else {
+		return localStorage.removeItem('token');
+	}
+};
+
+export const setUserInLocalStorage = (user: User | null) => {
+	if (user) {
+		localStorage.setItem('user', JSON.stringify(user));
+	} else {
+		localStorage.removeItem('user');
+	}
+};
+
+const getUserFromLocalstorage = () => {
+	const userJSON = localStorage.getItem('user');
+	if (userJSON) {
+		return JSON.parse(userJSON) as User;
+	}
+	return null;
+};
 const initialState: AuthState = {
-	user: null,
+	user: getUserFromLocalstorage(),
 	loading: false,
 	error: null,
+	token: getTokenFromLocalStorage(),
 };
 
 // Define an async thunk for user registration
-export const registerUser = createAsyncThunk(
+export const registerUser = createAsyncThunk<
+	User,
+	{ username: string; email: string; password: string }
+>(
 	'auth/register',
 	async (userData: { username: string; email: string; password: string }) => {
 		try {
 			const response = await axios.post('/auth/register', userData);
 			if (response) {
+				toast.success('Registration successfull');
 				return response.data;
 			}
 		} catch (error) {
-			console.log(error);
+			if (error instanceof AxiosError) {
+				toast.error(error.response?.data);
+			}
 			throw error; // You should re-throw the error to ensure the rejection of the promise.
 		}
 	}
 );
 
 // Define an async thunk for user sign-in
-export const signInUser = createAsyncThunk(
+export const signInUser = createAsyncThunk<
+	User,
+	{ email: string; password: string }
+>(
 	'auth/signin',
-	async (credentials: { email: string; password: string }) => {
+	async (
+		credentials: { email: string; password: string },
+		{ rejectWithValue }
+	) => {
 		try {
 			const response = await axios.post('/auth/signin', credentials);
-			return response.data;
+			return response.data as User;
 		} catch (error) {
-			console.log(error);
+			if (error instanceof AxiosError) {
+				toast.error(error.response?.data);
+			}
+			return rejectWithValue(error);
 		}
 	}
 );
@@ -62,6 +108,7 @@ const authSlice = createSlice({
 			state.user = null;
 			state.loading = false;
 			state.error = null;
+			localStorage.removeItem('token');
 		},
 	},
 	extraReducers: (builder) => {
@@ -85,6 +132,9 @@ const authSlice = createSlice({
 			.addCase(signInUser.fulfilled, (state, action: PayloadAction<User>) => {
 				state.loading = false;
 				state.user = action.payload;
+				state.token = action.payload.token;
+				setTokenInLocalStorage(action.payload.token); // Store the token in local storage
+				setUserInLocalStorage(action.payload); // Save user data in local storage
 			})
 			.addCase(signInUser.rejected, (state, action) => {
 				state.loading = false;
@@ -97,6 +147,9 @@ const authSlice = createSlice({
 			.addCase(logoutUser.fulfilled, (state) => {
 				state.loading = false;
 				state.user = null; // Clear the user data
+				state.token = null;
+				setTokenInLocalStorage(null);
+				setUserInLocalStorage(null); // Save user data in local storage
 			})
 			.addCase(logoutUser.rejected, (state, action) => {
 				state.loading = false;

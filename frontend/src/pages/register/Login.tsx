@@ -4,15 +4,13 @@ import './register.scss';
 import MailLockIcon from '@mui/icons-material/MailLock';
 import EnhancedEncryptionIcon from '@mui/icons-material/EnhancedEncryption';
 import { signInUser } from '../../redux/authSlice';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../../redux/store';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../../redux/store';
 import { useNavigate } from 'react-router';
 
 const Login = () => {
 	const dispatch = useDispatch<AppDispatch>();
-	const authState = useSelector((state: RootState) => state.auth);
 	const navigate = useNavigate();
-	console.log(authState);
 
 	const handleSubmit = (formData: { [key: string]: string }) => {
 		// Handle form submission specific to Component1
@@ -20,6 +18,7 @@ const Login = () => {
 		dispatch(signInUser({ email, password }));
 		navigate('/', { replace: true });
 	};
+
 	const fields: FieldConfig[] = [
 		{
 			name: 'email',

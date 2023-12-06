@@ -21,7 +21,7 @@ interface Props {
 
 const Form: React.FC<Props> = ({ fields, onSubmit, formType }) => {
 	const [formValues, setFormValues] = useState<{ [key: string]: string }>({});
-
+	// const [isFormEmpty, setIsFormEmpty] = useState(true);
 	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
 		setFormValues({ ...formValues, [name]: value });
@@ -29,9 +29,23 @@ const Form: React.FC<Props> = ({ fields, onSubmit, formType }) => {
 
 	const handleSubmit = (e: FormEvent) => {
 		e.preventDefault();
+
 		onSubmit(formValues);
 	};
 
+	// function areObjectValuesNonEmpty(obj: { [key: string]: any }): boolean {
+	// 	return Object.values(obj).every((value) => {
+	// 		return value !== undefined && value !== null && value !== '';
+	// 	});
+	// }
+
+	// useEffect(() => {
+	// 	if (areObjectValuesNonEmpty(formValues)) {
+	// 		setIsFormEmpty(false);
+	// 	} else {
+	// 		setIsFormEmpty(true);
+	// 	}
+	// }, [formValues, isFormEmpty]);
 	return (
 		<form onSubmit={handleSubmit}>
 			{fields.map((field) => (
@@ -51,21 +65,31 @@ const Form: React.FC<Props> = ({ fields, onSubmit, formType }) => {
 					</div>
 				</div>
 			))}
-			{formType !== 'link' && (
+			{
 				<>
 					<div className='form__group flex-column'>
-						<button type='submit' className='button'>
-							{formType === 'register' ? 'Create New Account' : 'Sign In'}
+						<button
+							type='submit'
+							className='button'
+							// disabled={areObjectValuesNonEmpty(formValues)}
+						>
+							{formType === 'register'
+								? 'Create New Account'
+								: formType === 'link'
+								? 'Add Link'
+								: 'Sign In'}
 						</button>
 					</div>
-					<p>
-						Already have an account?
-						<Link to={formType === 'register' ? '/login' : '/register'}>
-							{formType === 'register' ? 'Login' : 'Register'}
-						</Link>
-					</p>
+					{formType !== 'link' && (
+						<p>
+							Already have an account?
+							<Link to={formType === 'register' ? '/login' : '/register'}>
+								{formType === 'register' ? 'Login' : 'Register'}
+							</Link>
+						</p>
+					)}
 				</>
-			)}
+			}
 		</form>
 	);
 };

@@ -27,18 +27,20 @@ const signin = async (req, res) => {
             const token = jwt.sign({ userId: user._id }, 'jsonwebtoken', {
                 expiresIn: '1h',
             });
-            return res
-                .status(200)
-                .json({ username: user?.username, email: user?.email, token });
+            return res.status(200).json({
+                id: user._id,
+                username: user?.username,
+                email: user?.email,
+                token,
+            });
         }
     }
     catch (error) {
-        res.status(400).send('Failed to login');
+        return res.status(400).send('Failed to login');
     }
 };
 const register = async (req, res) => {
     const { email, username, password } = req.body;
-    console.log(req.body, 'reqnody');
     try {
         if (!username || !email) {
             return res.status(400).send('Enter all fields');
@@ -48,7 +50,7 @@ const register = async (req, res) => {
         }
         const userExist = await User.findOne({ email });
         if (userExist) {
-            res.status(400).send('email already exists');
+            return res.status(400).send('email already exists');
         }
         const user = await new User({
             email,
@@ -59,7 +61,8 @@ const register = async (req, res) => {
         res.status(200).send(user);
     }
     catch (error) {
-        return res.status(400).send('Error creating user');
+        console.error(error, 'error');
+        return res.status(400).json({ msg: 'Error creating user', error: error });
     }
 };
 export default { signin, register };

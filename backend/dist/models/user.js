@@ -4,6 +4,7 @@ const UserSchema = new Schema({
     username: String,
     password: String,
     email: String,
+    id: String,
 });
 UserSchema.pre('save', async function (next) {
     const user = this;

@@ -13,12 +13,13 @@
 }
 
 body {
-	overflow: hidden;
+	overflow-y: scroll;
+	overflow-x: hidden;
 }
 
 a {
 	color: inherit;
-
+	text-decoration: none;
 }
 
 .flex-center {

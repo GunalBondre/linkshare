@@ -1,6 +1,5 @@
 .home {
     width: 100vw;
-    height: 100vh;
 
     &__wrapper {
         width: 100%;
@@ -21,5 +20,50 @@
     &__right {
         background-color: #EEF0F2;
 
+    }
+
+    &__links {
+        width: 100%;
+
+        .title {
+            text-align: center;
+        }
+
+        .link-container {
+            height: 300px;
+            width: 80%;
+            margin: 0 auto;
+            overflow-y: scroll;
+
+            &::-webkit-scrollbar {
+                padding-left: 10px;
+            }
+
+            .action {
+                display: flex;
+                flex-direction: column;
+
+                .link-button:first-child {
+                    margin-bottom: 10px;
+
+                }
+
+                .link-button {
+                    border-radius: 0;
+                    padding: 5px;
+                    border: none;
+                }
+            }
+        }
+    }
+
+    .card {
+        display: flex;
+        margin-bottom: 10px;
+        background-color: white;
+        border-radius: 10px;
+        padding: 10px 20px;
+        width: 100%;
+        justify-content: space-between;
     }
 }

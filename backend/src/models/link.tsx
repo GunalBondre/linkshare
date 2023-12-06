@@ -2,12 +2,12 @@ import mongoose, { Document, Schema } from 'mongoose';
 
 export interface ILink extends Document {
 	title: string;
-	url: string;
+	link: string;
 	createdBy: object;
 }
 const linkSchema = new Schema<ILink>({
 	title: { type: String },
-	url: { type: String },
+	link: { type: String },
 	createdBy: {
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'User',

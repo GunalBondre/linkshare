@@ -5,12 +5,14 @@ export interface IUser extends Document {
 	username: string;
 	password: string;
 	email: string;
+	id: string;
 }
 
 const UserSchema = new Schema<IUser>({
 	username: String,
 	password: String,
 	email: String,
+	id: String,
 });
 
 UserSchema.pre('save', async function (next) {

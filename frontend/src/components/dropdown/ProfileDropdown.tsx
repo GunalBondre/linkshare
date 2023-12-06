@@ -13,8 +13,6 @@ const ProfileDropdown: React.FC = () => {
 	const authState = useSelector((state: RootState) => state.auth);
 	const navigate = useNavigate();
 
-	console.log(authState);
-
 	const toggleDropdown = () => {
 		setIsOpen(!isOpen);
 	};
@@ -28,42 +26,60 @@ const ProfileDropdown: React.FC = () => {
 		}
 	};
 
+	const closeDropdownOnBlur = (event: FocusEvent) => {
+		if (
+			dropdownRef.current &&
+			!dropdownRef.current.contains(event.relatedTarget as Node)
+		) {
+			setIsOpen(false);
+		}
+	};
 	const handleLogout = () => {
 		dispatch(logoutUser());
 		navigate('/login');
 		setIsOpen(false);
 	};
+
+	const goToLogin = () => {
+		setIsOpen(false);
+		navigate('/login');
+	};
 	useEffect(() => {
 		document.addEventListener('click', handleClickOutside);
-
+		document.addEventListener('focusin', closeDropdownOnBlur);
 		return () => {
 			document.removeEventListener('click', handleClickOutside);
+			document.removeEventListener('focusin', closeDropdownOnBlur);
 		};
-	});
+	}, [isOpen]);
 	return (
 		<div className='profile-dropdown' ref={dropdownRef}>
-			{authState?.user?.username && (
-				<>
-					<div className='profile' onClick={toggleDropdown}>
-						<div className='icon'>
-							<AccountCircleIcon />
-						</div>
-						<span>{authState?.user?.username}</span>
+			<>
+				<div className='profile' onClick={toggleDropdown}>
+					<div className='icon'>
+						<AccountCircleIcon />
 					</div>
+					<span>{authState?.user?.username}</span>
+				</div>
 
-					{isOpen && (
-						<div className='dropdown-content'>
-							<ul>
-								<li>Profile</li>
-								<li>Account Settings</li>
+				{isOpen && (
+					<div className='dropdown-content'>
+						<ul>
+							<li>Profile</li>
+							<li>Account Settings</li>
+							{authState?.token === null ? (
+								<li onClick={goToLogin}>Login</li>
+							) : (
 								<li onClick={handleLogout}>Logout</li>
-							</ul>
-						</div>
-					)}
-				</>
-			)}
+							)}
+						</ul>
+					</div>
+				)}
+			</>
 		</div>
 	);
 };
 
-export default ProfileDropdown;
+const MemoizedProfileDropdown = React.memo(ProfileDropdown);
+
+export default MemoizedProfileDropdown;

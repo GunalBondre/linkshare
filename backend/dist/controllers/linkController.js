@@ -5,17 +5,18 @@ function isValidURL(url) {
     return urlPattern.test(url);
 }
 const addLink = async (req, res) => {
-    const { title, url, id } = req.body;
+    const { title, link, id } = req.body;
+    console.log(id, 'id');
     try {
-        if (!title || !url) {
+        if (!title || !link) {
             return res.status(400).send('please enter required fields');
         }
-        if (!isValidURL(url)) {
+        if (!isValidURL(link)) {
             return res.status(400).send('wrong url format');
         }
         const newLink = await new Link({
             title,
-            url,
+            link,
             createdBy: id,
         });
         await newLink.save();
@@ -25,5 +26,30 @@ const addLink = async (req, res) => {
         return res.status(400).send('link save failed');
     }
 };
-export default { addLink };
+const getAllLinks = async (req, res) => {
+    try {
+        const userId = req.params.id;
+        const links = await Link.find({ createdBy: userId }).select('title link');
+        if (links) {
+            return res.status(200).json(links);
+        }
+        else {
+            return res.status(404).json({ error: 'No links found for the user' });
+        }
+    }
+    catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: 'Internal server error' });
+    }
+};
+const deleteLink = async (req, res) => {
+    try {
+        await Link.findByIdAndDelete(req.params.id);
+        return res.status(200).send('delete success');
+    }
+    catch (error) {
+        throw error;
+    }
+};
+export default { addLink, getAllLinks, deleteLink };
 //# sourceMappingURL=linkController.js.map

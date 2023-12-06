@@ -1,7 +1,7 @@
 import mongoose, { Schema } from 'mongoose';
 const linkSchema = new Schema({
     title: { type: String },
-    url: { type: String },
+    link: { type: String },
     createdBy: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
