@@ -23,10 +23,11 @@
 		"mongoose": "^7.6.2",
 		"morgan": "^1.10.0",
 		"nodemon": "^3.0.1",
+		"stripe": "^14.7.0",
 		"typescript": "^5.1.6"
 	},
 	"scripts": {
 		"build": "tsc",
-		"start": "nodemon dist/server.js"
+		"start": "nodemon --inspect dist/server.js"
 	}
 }

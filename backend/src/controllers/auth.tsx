@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import User from '../models/user.js';
+import User, { Plan, Status } from '../models/user.js';
 
 const isStrongPassword = (password: string) => {
 	const hasLowercase = /[a-z]/.test(password);
@@ -29,7 +29,7 @@ const signin = async (req: Request, res: Response) => {
 		} else {
 			const validPassword = await bcrypt.compare(password, user?.password);
 			if (!validPassword) {
-				res.status(400).send('please enter correct password');
+				return res.status(400).send('please enter correct password');
 			}
 			const token = jwt.sign({ userId: user._id }, 'jsonwebtoken', {
 				expiresIn: '1h',
@@ -39,6 +39,7 @@ const signin = async (req: Request, res: Response) => {
 				id: user._id,
 				username: user?.username,
 				email: user?.email,
+
 				token,
 			});
 		}
@@ -66,6 +67,11 @@ const register = async (req: Request, res: Response) => {
 			email,
 			username,
 			password,
+			subscription: {
+				plan: Plan.Free,
+				status: Status.Inactive,
+				expiresAt: new Date(),
+			},
 		});
 
 		await user.save();

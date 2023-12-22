@@ -6,10 +6,12 @@ import Form from '../form/Form';
 import { createLink } from '../../redux/linkSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../redux/store';
+import { toast } from 'react-toastify';
 
 const LinkForm = () => {
 	const dispatch = useDispatch<AppDispatch>();
 	const userData = useSelector((state: RootState) => state.auth);
+	const linkState = useSelector((state: RootState) => state?.links);
 	const { user } = userData;
 	const id = user?.id;
 
@@ -30,12 +32,18 @@ const LinkForm = () => {
 		},
 	];
 
-	const handleSubmit = (formData: { [key: string]: string }) => {
-		// Handle form submission specific to Component1
+	console.log(linkState.collection.length, 'length');
 
+	const handleSubmit = (formData: { [key: string]: string }) => {
 		const { title, link } = formData;
 
-		dispatch(createLink({ title, link, id }));
+		if (!title || !link) {
+			toast.error('add required fields');
+		} else if (linkState.collection.length > 3) {
+			toast.error('link limit reached get premium subscription');
+		} else {
+			dispatch(createLink({ title, link, id }));
+		}
 	};
 	return (
 		<div>

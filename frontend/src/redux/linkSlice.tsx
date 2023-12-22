@@ -31,20 +31,26 @@ export const createLink = createAsyncThunk(
 	async (linkData: { title: string; link: string; id: string }) => {
 		// const currentState = getState() as { links: LinkState };
 
-		try {
-			const response = await axios.post('/link/add', linkData);
-			// const updatedCollection = [
-			// 	...currentState.links.collection,
-			// 	response.data,
-			// ];
+		console.log(linkData);
 
-			// localStorage.setItem('links', JSON.stringify(updatedCollection));
-			if (response) {
-				toast.success('link added successfully');
-				return response.data;
+		if (linkData.title === undefined || !linkData.link === undefined) {
+			toast.error('please add the required fields');
+		} else {
+			try {
+				const response = await axios.post('/link/add', linkData);
+				// const updatedCollection = [
+				// 	...currentState.links.collection,
+				// 	response.data,
+				// ];
+
+				// localStorage.setItem('links', JSON.stringify(updatedCollection));
+				if (response) {
+					toast.success('link added successfully');
+					return response.data;
+				}
+			} catch (error) {
+				console.log(error);
 			}
-		} catch (error) {
-			console.log(error);
 		}
 	}
 );

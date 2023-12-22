@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import Link from '../models/link.js';
-import axios from 'axios';
 
 function isValidURL(url: string) {
 	// Use a regular expression to validate URLs
@@ -37,7 +36,6 @@ const getAllLinks = async (req: Request, res: Response) => {
 		const userId = req.params.id;
 
 		const links = await Link.find({ createdBy: userId }).select('title link');
-
 		if (links) {
 			return res.status(200).json(links);
 		} else {

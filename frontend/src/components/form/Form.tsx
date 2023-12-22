@@ -9,8 +9,6 @@ export interface FieldConfig {
 	placeholder: string;
 	icon: React.ReactNode;
 	width?: string;
-
-	// Add more attributes like placeholder, required, etc., as needed
 }
 
 interface Props {
@@ -21,7 +19,6 @@ interface Props {
 
 const Form: React.FC<Props> = ({ fields, onSubmit, formType }) => {
 	const [formValues, setFormValues] = useState<{ [key: string]: string }>({});
-	// const [isFormEmpty, setIsFormEmpty] = useState(true);
 	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
 		setFormValues({ ...formValues, [name]: value });
@@ -29,23 +26,10 @@ const Form: React.FC<Props> = ({ fields, onSubmit, formType }) => {
 
 	const handleSubmit = (e: FormEvent) => {
 		e.preventDefault();
-
 		onSubmit(formValues);
+		setFormValues({});
 	};
 
-	// function areObjectValuesNonEmpty(obj: { [key: string]: any }): boolean {
-	// 	return Object.values(obj).every((value) => {
-	// 		return value !== undefined && value !== null && value !== '';
-	// 	});
-	// }
-
-	// useEffect(() => {
-	// 	if (areObjectValuesNonEmpty(formValues)) {
-	// 		setIsFormEmpty(false);
-	// 	} else {
-	// 		setIsFormEmpty(true);
-	// 	}
-	// }, [formValues, isFormEmpty]);
 	return (
 		<form onSubmit={handleSubmit}>
 			{fields.map((field) => (
@@ -60,7 +44,6 @@ const Form: React.FC<Props> = ({ fields, onSubmit, formType }) => {
 							onChange={handleChange}
 							placeholder={field.placeholder}
 							style={{ width: field.width }}
-							// You can add other input attributes like placeholder, required, etc.
 						/>
 					</div>
 				</div>
@@ -68,11 +51,7 @@ const Form: React.FC<Props> = ({ fields, onSubmit, formType }) => {
 			{
 				<>
 					<div className='form__group flex-column'>
-						<button
-							type='submit'
-							className='button'
-							// disabled={areObjectValuesNonEmpty(formValues)}
-						>
+						<button type='submit' className='button'>
 							{formType === 'register'
 								? 'Create New Account'
 								: formType === 'link'

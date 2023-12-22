@@ -19,6 +19,15 @@ const Mockups = () => {
 		}
 	}, [dispatch, userData?.user?.id]);
 
+	const getRandomColor = () => {
+		const letters = '0123456789ABCDEF';
+		let color = '#';
+		for (let i = 0; i < 6; i++) {
+			color += letters[Math.floor(Math.random() * 16)];
+		}
+		return color;
+	};
+
 	return (
 		<div className='iphone-13-mockup'>
 			<div className='screen-content'>
@@ -26,7 +35,7 @@ const Mockups = () => {
 				<h1>Welcome to Linkshare</h1>
 				<p>Some awesome content goes here!</p>
 				{collection?.map((link) => (
-					<div className='links'>
+					<div className='links' style={{ backgroundColor: getRandomColor() }}>
 						<a href={`${link?.link}`} target='_blank' rel='noopener noreferrer'>
 							{link?.title}
 						</a>

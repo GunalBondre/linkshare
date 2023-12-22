@@ -17,7 +17,7 @@ const Signup = () => {
 		// Handle form submission specific to Component1
 		const { email, username, password } = formData;
 		dispatch(registerUser({ email, username, password }));
-		if (authState.user !== null) {
+		if (authState.user?.username !== null) {
 			navigate('/login');
 		}
 	};
