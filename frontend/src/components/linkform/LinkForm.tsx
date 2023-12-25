@@ -32,14 +32,15 @@ const LinkForm = () => {
 		},
 	];
 
-	console.log(linkState.collection.length, 'length');
-
 	const handleSubmit = (formData: { [key: string]: string }) => {
 		const { title, link } = formData;
 
 		if (!title || !link) {
 			toast.error('add required fields');
-		} else if (linkState.collection.length > 3) {
+		} else if (
+			linkState.collection.length > 3 &&
+			userData?.user?.subscription?.plan !== 'paid'
+		) {
 			toast.error('link limit reached get premium subscription');
 		} else {
 			dispatch(createLink({ title, link, id }));

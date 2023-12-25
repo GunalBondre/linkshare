@@ -8,10 +8,12 @@ import authRoutes from './routes/authRoute.js';
 import linkRoutes from './routes/linkRoute.js';
 import paymentRoutes from './routes/paymentRoute.js';
 import User, { Plan, Status } from './models/user.js';
-import { stripeInstance } from './controllers/paymentController.js';
+// import { stripeInstance } from './controllers/paymentController.js';
 
+import dotenv from 'dotenv';
+dotenv.config();
 const app = express();
-
+console.log(process.env.GMAIL_USER_NAME, 'fg');
 app.use(cors());
 app.use(helmet());
 app.use(morgan('dev'));

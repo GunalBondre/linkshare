@@ -14,18 +14,31 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useSelector } from 'react-redux';
 import { RootState } from './redux/store';
 import Pricing from './pages/pricing/Pricing';
-import { Elements } from '@stripe/react-stripe-js';
-import CheckoutForm from './pages/pricing/CheckoutForm';
-import { loadStripe } from '@stripe/stripe-js';
-import Success from './components/Success';
 import { Cancel } from '@mui/icons-material';
+import { useEffect, useState } from 'react';
+import SuccessDisplay from './components/Success';
 
 function App() {
 	const authState = useSelector((state: RootState) => state.auth);
 	const isAuthenticated = authState?.token;
-	const stripePromise = loadStripe(
-		'pk_test_51OKeOlSJHRwPbqT2PnAnZ3j7LO0N06tjCd0lIQVV1hma0CW0xypdo19EFMYgpsJiVoKeFlziX07ABoYUpzzwuwA600V97jKf4P'
-	);
+
+	const [sessionId, setSessionId] = useState('');
+	const [success, setSuccess] = useState(false);
+
+	useEffect(() => {
+		// Check to see if this is a redirect back from Checkout
+		const query = new URLSearchParams(window.location.search);
+
+		if (query.get('success')) {
+			setSuccess(true);
+			setSessionId(query.get('session_id'));
+		}
+	}, [sessionId]);
+
+	if (success && sessionId !== '') {
+		return <SuccessDisplay sessionId={sessionId} />;
+	}
+
 	return (
 		<div>
 			<Router>
@@ -47,10 +60,18 @@ function App() {
 					) : (
 						<Route path='/register' element={<Register />} />
 					)}
-					{isAuthenticated && <Route path='/pricing' element={<Pricing />} />}
+					{isAuthenticated && (
+						<Route
+							path='/pricing'
+							element={<Pricing setSessionId={setSessionId} />}
+						/>
+					)}
 					{isAuthenticated && (
 						<>
-							<Route path='/success' element={<Success />} />
+							<Route
+								path='/success'
+								element={<SuccessDisplay sessionId={sessionId} />}
+							/>
 							<Route path='/cancel' element={<Cancel />} />
 						</>
 					)}

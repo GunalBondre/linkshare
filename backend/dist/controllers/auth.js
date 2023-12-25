@@ -1,6 +1,8 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { v4 as uuid } from 'uuid';
 import User, { Plan, Status } from '../models/user.js';
+import nodemailer from 'nodemailer';
 const isStrongPassword = (password) => {
     const hasLowercase = /[a-z]/.test(password);
     const hasUppercase = /[A-Z]/.test(password);
@@ -31,6 +33,7 @@ const signin = async (req, res) => {
                 id: user._id,
                 username: user?.username,
                 email: user?.email,
+                subscription: user?.subscription,
                 token,
             });
         }
@@ -70,5 +73,68 @@ const register = async (req, res) => {
         return res.status(400).json({ msg: 'Error creating user', error: error });
     }
 };
-export default { signin, register };
+const checkUserInDb = async (req, res) => {
+    try {
+        const userEmail = req.query.email; // Assuming you pass the user's email as a query parameter
+        const user = await User.findOne({ email: userEmail });
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+        // Include subscription status in the response
+        res.json({
+            email: user.email,
+            subscription: {
+                plan: user.subscription.plan,
+                status: user.subscription.status,
+                expiresAt: user.subscription.expiresAt,
+            },
+        });
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
+const resetPassword = async (req, res) => {
+    const { email } = req.body;
+    try {
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(404).json({ msg: 'User not found' });
+        }
+        const resetToken = uuid();
+        user.resetPasswordToken = resetToken;
+        user.resetPasswordExpires = Date.now() + 3600000; // Token expires in 1 hour
+        await user.save();
+        sendPasswordResetEmail(user.email, resetToken);
+        res.json({ msg: 'Password reset email sent successfully' });
+    }
+    catch (error) {
+        res.status(500).json({ msg: 'Internal Server Error' });
+    }
+};
+const sendPasswordResetEmail = (email, token) => {
+    const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: process.env.GMAIL_USER_NAME,
+            pass: process.env.GMAIL_PASSWORD,
+        },
+    });
+    const mailOptions = {
+        from: 'bpndre.gunal@gmail.com',
+        to: email,
+        subject: 'Password Reset',
+        text: `Click the following link to reset your password: http://localhost:4000/auth/reset-password/${token}`,
+    };
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            console.error(error);
+        }
+        else {
+            console.log('Email sent: ' + info.response);
+        }
+    });
+};
+export default { signin, register, checkUserInDb, resetPassword };
 //# sourceMappingURL=auth.js.map

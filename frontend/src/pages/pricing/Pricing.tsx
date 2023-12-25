@@ -3,14 +3,29 @@ import { loadStripe } from '@stripe/stripe-js';
 import axios from 'axios';
 import './pricing.scss';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../redux/store';
-const Pricing = () => {
+import { AppDispatch, RootState } from '../../redux/store';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { getUser } from '../../redux/authSlice';
+
+interface PricingProps {
+	setSessionId: React.Dispatch<React.SetStateAction<string>>;
+}
+
+const Pricing: React.FC<PricingProps> = ({ setSessionId }) => {
+	const dispatch = useDispatch<AppDispatch>();
+	const authData = useSelector((state: RootState) => state?.auth);
+
 	const stripePromise = loadStripe(
 		'pk_test_51OQ0tiIE2Xq7Mx2QPZMR351WSQthKdYBYKx8sGcH7hDl2AQwPv2fuwpkPAV1H1UoQcDTIQfmfPjKXpqBC90hCAwf00hOgH6kjA'
 	);
 	const authState = useSelector((state: RootState) => state.auth);
 
-	const handleClick = async (e) => {
+	useEffect(() => {
+		dispatch(getUser(authData?.user?.email || ''));
+	}, [authData?.user?.email, dispatch]);
+
+	const handleClick = async (e: React.FormEvent) => {
 		e.preventDefault();
 
 		const data = {
@@ -29,12 +44,12 @@ const Pricing = () => {
 
 			const session = response.data;
 			const stripe = await stripePromise;
-
+			if (session.id) {
+				await setSessionId(session.id);
+			}
 			const result = await (stripe as any)?.redirectToCheckout({
 				sessionId: session.id,
 			});
-
-			console.log(result, 'result');
 
 			if (result?.error) {
 				console.error(result.error.message);
@@ -69,12 +84,21 @@ const Pricing = () => {
 					<li className='plan-feature'>Feature 3</li>
 				</ul>
 
-				<form onSubmit={handleClick}>
-					<input type='hidden' name='lookup_key' value='subscription' />
-					<button id='checkout-and-portal-button' type='submit'>
-						Checkout
-					</button>
-				</form>
+				{authState?.user?.subscription?.plan === 'free' ? (
+					<span className='plan-label'>Active Plan</span>
+				) : (
+					<form onSubmit={handleClick}>
+						<input type='hidden' name='lookup_key' value='subscription' />
+						<button
+							id='checkout-and-portal-button'
+							className='btn'
+							type='submit'
+						>
+							Checkout
+						</button>
+					</form>
+				)}
+
 				{/* <input type='hidden' name='lookup_key' value='testy' />
 				<button className='btn' onClick={handleClick}>
 					Choose Plan

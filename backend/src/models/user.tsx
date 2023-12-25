@@ -40,6 +40,8 @@ export interface IUser extends Document {
 	email: string;
 	id: string;
 	subscription: Subscription;
+	resetPasswordToken: string;
+	resetPasswordExpires: number;
 }
 
 const UserSchema = new Schema<IUser>({
@@ -48,6 +50,8 @@ const UserSchema = new Schema<IUser>({
 	email: String,
 	id: String,
 	subscription: SubscriptionSchema,
+	resetPasswordToken: String,
+	resetPasswordExpires: String,
 });
 
 UserSchema.pre('save', async function (next) {

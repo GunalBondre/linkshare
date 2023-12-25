@@ -3,14 +3,19 @@ import Mockups from '../../components/mobileMockup/Mockup';
 import './home.scss';
 import { jwtDecode, JwtPayload } from 'jwt-decode';
 import { useEffect } from 'react';
-import { logoutUser, setUserInLocalStorage } from '../../redux/authSlice';
+import {
+	getUser,
+	logoutUser,
+	setUserInLocalStorage,
+} from '../../redux/authSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../redux/store';
+import { AppDispatch, RootState } from '../../redux/store';
 import { deleteLink } from '../../redux/linkSlice';
 
 const Home = () => {
-	const dispatch = useDispatch();
+	const dispatch = useDispatch<AppDispatch>();
 	const linkData = useSelector((state: RootState) => state.links);
+	const authData = useSelector((state: RootState) => state?.auth);
 	const { collection } = linkData;
 	useEffect(() => {
 		const checkTokenValidity = async () => {
@@ -26,14 +31,29 @@ const Home = () => {
 					} catch (error) {
 						console.error('Logout error:', error);
 					}
-				} else {
-					console.log('token valid');
 				}
 			}
 		};
 
 		checkTokenValidity();
 	}, [dispatch]);
+
+	useEffect(() => {
+		const fetchUser = async () => {
+			try {
+				await dispatch(getUser(authData?.user?.email || ''));
+			} catch (error) {
+				console.log('Error fetching user:', error);
+				dispatch(logoutUser());
+			}
+		};
+
+		if (authData?.user?.email) {
+			fetchUser();
+		} else {
+			dispatch(logoutUser());
+		}
+	}, [authData?.user?.email, dispatch]);
 
 	const handleDeleteClick = (linkid: string) => {
 		console.log(linkid, 'linkid');

@@ -8,7 +8,12 @@ interface User {
 	email: string;
 	password: string;
 	token: string | null;
-	// Add other user properties here
+	subscription: {
+		status: 'active' | 'inactive';
+		plan: 'free' | 'paid' | 'premium';
+		expiresAt: string | null; // Assuming it's a string representing a date
+		// Add other properties related to the subscription
+	};
 }
 
 interface AuthState {
@@ -96,6 +101,15 @@ export const signInUser = createAsyncThunk<
 	}
 );
 
+export const getUser = createAsyncThunk(
+	'auth/getUser',
+	async (email: string) => {
+		const response = await axios.get(`/auth/getUser?email=${email}`);
+		console.log(response.data, 'data');
+		return response.data as User;
+	}
+);
+
 export const logoutUser = createAsyncThunk('auth/logout', async () => {
 	return null;
 });
@@ -133,6 +147,7 @@ const authSlice = createSlice({
 				state.loading = false;
 				state.user = action.payload;
 				state.token = action.payload.token;
+				state.user.subscription = action.payload.subscription;
 				setTokenInLocalStorage(action.payload.token); // Store the token in local storage
 				setUserInLocalStorage(action.payload); // Save user data in local storage
 			})
@@ -154,6 +169,20 @@ const authSlice = createSlice({
 			.addCase(logoutUser.rejected, (state, action) => {
 				state.loading = false;
 				state.error = action.payload as string; // Handle logout error
+			})
+			.addCase(getUser.pending, (state) => {
+				state.loading = true;
+				state.error = null;
+			})
+			.addCase(getUser.fulfilled, (state, action) => {
+				state.loading = false;
+				state.user = action.payload;
+			})
+			.addCase(getUser.rejected, (state) => {
+				state.user = null; // Clear the user data
+				state.token = null;
+				setTokenInLocalStorage(null);
+				setUserInLocalStorage(null); // Save user data in local storage
 			});
 	},
 });

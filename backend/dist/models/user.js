@@ -29,6 +29,8 @@ const UserSchema = new Schema({
     email: String,
     id: String,
     subscription: SubscriptionSchema,
+    resetPasswordToken: String,
+    resetPasswordExpires: String,
 });
 UserSchema.pre('save', async function (next) {
     const user = this;
