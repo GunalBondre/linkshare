@@ -1,8 +1,8 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { v4 as uuid } from 'uuid';
 import User, { Plan, Status } from '../models/user.js';
 import nodemailer from 'nodemailer';
+import crypto from 'crypto';
 const isStrongPassword = (password) => {
     const hasLowercase = /[a-z]/.test(password);
     const hasUppercase = /[A-Z]/.test(password);
@@ -23,6 +23,7 @@ const signin = async (req, res) => {
         }
         else {
             const validPassword = await bcrypt.compare(password, user?.password);
+            console.log(password, user.password, validPassword);
             if (!validPassword) {
                 return res.status(400).send('please enter correct password');
             }
@@ -81,8 +82,9 @@ const checkUserInDb = async (req, res) => {
             return res.status(404).json({ error: 'User not found' });
         }
         // Include subscription status in the response
-        res.json({
+        return res.json({
             email: user.email,
+            username: user.username,
             subscription: {
                 plan: user.subscription.plan,
                 status: user.subscription.status,
@@ -95,14 +97,14 @@ const checkUserInDb = async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
-const resetPassword = async (req, res) => {
+const resetPasswordEmail = async (req, res) => {
     const { email } = req.body;
     try {
         const user = await User.findOne({ email });
         if (!user) {
             return res.status(404).json({ msg: 'User not found' });
         }
-        const resetToken = uuid();
+        const resetToken = crypto.randomBytes(20).toString('hex');
         user.resetPasswordToken = resetToken;
         user.resetPasswordExpires = Date.now() + 3600000; // Token expires in 1 hour
         await user.save();
@@ -111,6 +113,29 @@ const resetPassword = async (req, res) => {
     }
     catch (error) {
         res.status(500).json({ msg: 'Internal Server Error' });
+    }
+};
+const resetPassword = async (req, res) => {
+    const { password, token } = req.body.data;
+    console.log('first', req.body);
+    try {
+        const user = await User.findOne({
+            resetPasswordToken: token,
+            resetPasswordExpires: { $gt: Date.now() },
+        });
+        console.log(user, 'usr');
+        if (!user) {
+            return res.status(400).json({ message: 'Invalid or expired token' });
+        }
+        user.password = password;
+        user.resetPasswordExpires = undefined;
+        user.resetPasswordToken = undefined;
+        await user.save();
+        res.json({ message: 'Password updated successfully' });
+    }
+    catch (error) {
+        console.error('Error updating password:', error);
+        res.status(500).json({ message: 'Internal Server Error' });
     }
 };
 const sendPasswordResetEmail = (email, token) => {
@@ -125,7 +150,7 @@ const sendPasswordResetEmail = (email, token) => {
         from: 'bpndre.gunal@gmail.com',
         to: email,
         subject: 'Password Reset',
-        text: `Click the following link to reset your password: http://localhost:4000/auth/reset-password/${token}`,
+        text: `Click the following link to reset your password: http://localhost:5173/reset-password/?token=${token}`,
     };
     transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
@@ -136,5 +161,11 @@ const sendPasswordResetEmail = (email, token) => {
         }
     });
 };
-export default { signin, register, checkUserInDb, resetPassword };
+export default {
+    signin,
+    register,
+    checkUserInDb,
+    resetPassword,
+    resetPasswordEmail,
+};
 //# sourceMappingURL=auth.js.map

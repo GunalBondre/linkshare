@@ -56,16 +56,23 @@ const Form: React.FC<Props> = ({ fields, onSubmit, formType }) => {
 								? 'Create New Account'
 								: formType === 'link'
 								? 'Add Link'
+								: formType === 'resetpass'
+								? 'Reset Password'
 								: 'Sign In'}
 						</button>
 					</div>
 					{formType !== 'link' && (
-						<p>
-							Already have an account?
-							<Link to={formType === 'register' ? '/login' : '/register'}>
-								{formType === 'register' ? 'Login' : 'Register'}
-							</Link>
-						</p>
+						<>
+							<p>
+								Already have an account?
+								<Link to={formType === 'register' ? '/login' : '/register'}>
+									{formType === 'register' ? 'Login' : 'Register'}
+								</Link>
+							</p>
+							<p>
+								<Link to={'/profile'}>Reset password</Link>
+							</p>
+						</>
 					)}
 				</>
 			}

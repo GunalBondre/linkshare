@@ -28,9 +28,10 @@ const makePayment = async (req: Request, res: Response) => {
 			},
 		],
 		mode: 'subscription',
-		success_url: `${YOUR_DOMAIN}/?success=true&session_id={CHECKOUT_SESSION_ID}`,
+		success_url: `${YOUR_DOMAIN}/pricing`,
 		cancel_url: `${YOUR_DOMAIN}/?canceled=true`,
 	});
+	// ?success=true&session_id={CHECKOUT_SESSION_ID}
 
 	if (session.url) {
 		res.json({ url: session.url, id: session.id });

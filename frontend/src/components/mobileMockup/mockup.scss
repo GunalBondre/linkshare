@@ -1,7 +1,7 @@
 // iPhone13Mockup.scss
 $iphone13-width: 300px;
 $iphone13-height: 600px;
-$iphone13-bezel-width: 8px;
+$iphone13-bezel-width: 10px;
 $iphone13-bezel-color: #000;
 
 .iphone-13-mockup {
@@ -18,6 +18,8 @@ $iphone13-bezel-color: #000;
 
     /* Optional: Add some shadow to the mockup */
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+
+
 }
 
 .screen-content {
@@ -32,6 +34,12 @@ $iphone13-bezel-color: #000;
     background-color: #fff;
     border-radius: 36px;
     padding: 20px 10px;
+    overflow-y: scroll;
+
+    &::-webkit-scrollbar {
+        padding-left: 10px;
+        display: none;
+    }
 
     p {
         margin: 10px 0;

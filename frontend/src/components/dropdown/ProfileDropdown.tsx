@@ -44,6 +44,20 @@ const ProfileDropdown: React.FC = () => {
 		setIsOpen(false);
 		navigate('/login');
 	};
+
+	const goToSetting = () => {
+		setIsOpen(false);
+		navigate('/setting');
+	};
+	const goToProfile = () => {
+		setIsOpen(false);
+		navigate('/profile');
+	};
+
+	const goToView = () => {
+		setIsOpen(false);
+		navigate('/view');
+	};
 	useEffect(() => {
 		document.addEventListener('click', handleClickOutside);
 		document.addEventListener('focusin', closeDropdownOnBlur);
@@ -59,14 +73,16 @@ const ProfileDropdown: React.FC = () => {
 					<div className='icon'>
 						<AccountCircleIcon />
 					</div>
-					<span>{authState?.user?.username}</span>
+					<span className='username'>{authState?.user?.username}</span>
 				</div>
 
 				{isOpen && (
 					<div className='dropdown-content'>
 						<ul>
-							<li>Profile</li>
-							<li>Account Settings</li>
+							<li onClick={goToProfile}>Profile</li>
+							<li onClick={goToView}>View Demo</li>
+							<li onClick={goToSetting}>Setting</li>
+
 							{authState?.token === null ? (
 								<li onClick={goToLogin}>Login</li>
 							) : (

@@ -38,22 +38,22 @@ const Home = () => {
 		checkTokenValidity();
 	}, [dispatch]);
 
-	useEffect(() => {
-		const fetchUser = async () => {
-			try {
-				await dispatch(getUser(authData?.user?.email || ''));
-			} catch (error) {
-				console.log('Error fetching user:', error);
-				dispatch(logoutUser());
-			}
-		};
+	// useEffect(() => {
+	// 	const fetchUser = async () => {
+	// 		try {
+	// 			await dispatch(getUser(authData?.user?.email || ''));
+	// 		} catch (error) {
+	// 			console.log('Error fetching user:', error);
+	// 			dispatch(logoutUser());
+	// 		}
+	// 	};
 
-		if (authData?.user?.email) {
-			fetchUser();
-		} else {
-			dispatch(logoutUser());
-		}
-	}, [authData?.user?.email, dispatch]);
+	// 	if (authData?.user?.email) {
+	// 		fetchUser();
+	// 	} else {
+	// 		dispatch(logoutUser());
+	// 	}
+	// }, [authData?.user?.email, dispatch]);
 
 	const handleDeleteClick = (linkid: string) => {
 		console.log(linkid, 'linkid');

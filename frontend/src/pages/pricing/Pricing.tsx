@@ -84,7 +84,7 @@ const Pricing: React.FC<PricingProps> = ({ setSessionId }) => {
 					<li className='plan-feature'>Feature 3</li>
 				</ul>
 
-				{authState?.user?.subscription?.plan === 'free' ? (
+				{authState?.user?.subscription?.plan === 'paid' ? (
 					<span className='plan-label'>Active Plan</span>
 				) : (
 					<form onSubmit={handleClick}>

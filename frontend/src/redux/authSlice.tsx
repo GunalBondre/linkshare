@@ -105,7 +105,6 @@ export const getUser = createAsyncThunk(
 	'auth/getUser',
 	async (email: string) => {
 		const response = await axios.get(`/auth/getUser?email=${email}`);
-		console.log(response.data, 'data');
 		return response.data as User;
 	}
 );
@@ -113,6 +112,23 @@ export const getUser = createAsyncThunk(
 export const logoutUser = createAsyncThunk('auth/logout', async () => {
 	return null;
 });
+
+export const resetPassword = createAsyncThunk<
+	User,
+	{ password: string; token: string }
+>(
+	'auth/resetPassword',
+	async (credentials: { password: string; token: string }) => {
+		const url = `/auth/resetPassword`;
+		const response = await axios.post(url, { data: credentials });
+		if (response.data) {
+			toast.success(response?.data?.message);
+		} else {
+			toast.error(response?.data?.message);
+		}
+		return response.data as User;
+	}
+);
 
 const authSlice = createSlice({
 	name: 'auth',

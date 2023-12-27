@@ -17,6 +17,10 @@ import Pricing from './pages/pricing/Pricing';
 import { Cancel } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
 import SuccessDisplay from './components/Success';
+import ResetPassword from './pages/register/ResetPassword';
+import Setting from './components/setting/Setting';
+import Profile from './components/profile/Profile';
+import View from './components/view/View';
 
 function App() {
 	const authState = useSelector((state: RootState) => state.auth);
@@ -73,8 +77,12 @@ function App() {
 								element={<SuccessDisplay sessionId={sessionId} />}
 							/>
 							<Route path='/cancel' element={<Cancel />} />
+							<Route path='/profile' element={<Profile />} />
+							<Route path='/view' element={<View />} />
 						</>
 					)}
+					<Route path='/setting' element={<Setting />} />
+					<Route path='/reset-password' element={<ResetPassword />} />
 				</Routes>
 			</Router>
 		</div>

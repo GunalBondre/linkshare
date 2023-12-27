@@ -40,8 +40,8 @@ export interface IUser extends Document {
 	email: string;
 	id: string;
 	subscription: Subscription;
-	resetPasswordToken: string;
-	resetPasswordExpires: number;
+	resetPasswordToken?: string | undefined;
+	resetPasswordExpires?: number | undefined;
 }
 
 const UserSchema = new Schema<IUser>({
